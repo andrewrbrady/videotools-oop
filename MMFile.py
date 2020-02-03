@@ -1,29 +1,25 @@
 #!/usr/bin/env/python
 
-
+from datetime import datetime
+import time
 from ffprobe import FFProbe
 import json
 import os
 from PIL import Image
 import subprocess
-from ProjectActivity import ActivityFile as AF
 
 class MMFile():
     def __init__(self, path):
         self.filePath = path
         self.fileWOExtension, self.fileExtension = os.path.splitext(self.filePath)
         self.fileBasename = os.path.basename(self.filePath)
-
         self.size = os.path.getsize(path)
-
 
     def renameFile(self, newFileBasename):
         print(f'Renaming {self.fileBasename} to {newFileBasename}')
 
     def openFile(self, path):
-        print(f'Opening file {self.filePath}')
-
-    
+        print(f'Opening file {self.filePath}')  
 
 class VideoFile(MMFile):
     def __init__(self, path):
@@ -101,8 +97,8 @@ class VideoFile(MMFile):
         print('Transcribing video!')
 
     def resize(self):
-        newActivity = AF('/Users/andrewbrady/Desktop/database/OTR/OTR103')
-        newActivity.createNewActivity()
+        newActivity = ActivityFile('/Users/andrewbrady/Desktop/database/OTR/OTR103')
+        newActivity.createNewActivity(f'Resized {self.filePath}')
         print('Resizing video!')
     
     def addBumper(self, order, objects):
@@ -113,7 +109,6 @@ class VideoFile(MMFile):
 
     def openTranscript(self):
         print(f'Opening Transcript: {self.transcriptPath}')
-
 
 class ImageFile(MMFile):
     def __init__(self, path):
@@ -169,7 +164,6 @@ class AudioFile(MMFile):
     def hasTranscript(self):
         return None
 
-
 class DocumentFile(MMFile):
     def __init__(self, path):
         MMFile.__init__(self,path,type)
@@ -179,4 +173,74 @@ class DocumentFile(MMFile):
     def relatedPaths(self):
         return "Here is an arry of all related paths"
 
+class ActivityFile(DocumentFile):
+
+    def __init__(self, path):
+        MMFile.__init__(self,path)
+        self.projectDirectoryPath = path
+        self.logPath = '200_documents/207_logs'
+
+    @property
+    def projectActivityFile(self):
+        return os.path.join(self.projectDirectoryPath, self.logPath, 'activity-log.json')
+
+    def createNewActivityFile(self):
+        if os.path.exists(self.projectActivityFile):
+            print('path exists')
+        else:
+            try:
+                print('making directory')
+                open(self.projectActivityFile, 'w')
+                
+            except:
+                print('There was an error')
+
+    def createNewActivity(self, action, datetime=datetime.fromtimestamp(time.time())):
+        self.action = action
+        self.datetime = datetime
+        data = {
+            "action": f'{self.action}',
+            "datetime": f'{self.datetime}'
+            }
+            
+        try:
+            open(self.projectActivityFile, "a")
+        except:
+            print('failed, creating activity file')
+            self.createNewActivityFile()
+            
+        with open(self.projectActivityFile, "a") as write_file:
+                json.dump(data, write_file)
+
+class ProjectConfigFile(DocumentFile):
+    def __init__(self):
+        self.logPath = '200_documents/207_logs'
+
+    @property
+    def projectConfigurationFile(self):
+        return os.path.join(self.projectDirectoryPath, self.logPath, 'project-config.json')
+
+        
+    def createNewConfigFile(self):
+        if os.path.exists(self.projectConfigurationFile):
+            print('path exists')
+        else:
+            try:
+                print('making directory')
+                open(self.projectConfigurationFile, 'w')
+            except:
+                print('There was an error')
+
+    def setProjectConfigDefaults(self, mode=1):
+        # Edit project-config.json to have default values
+        pass
     
+    def editConfigFile(self):
+        pass
+
+    def updateRate(self):
+        # Update unit rate (i.e. day, hour, etc.) for project
+        pass
+
+    def updateHoursWorked(self):
+        pass
