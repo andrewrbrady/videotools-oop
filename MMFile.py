@@ -74,8 +74,8 @@ class VideoFile(MMFile):
                 
             else:
                 print("\n Not Valid Choice Try again")
-            return [self.options, self.output_format]
-            break
+            return self.options, self.output_format
+            # break
 
   
     def videoConvert(self,options,output_format):

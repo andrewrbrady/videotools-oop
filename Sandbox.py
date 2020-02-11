@@ -5,6 +5,7 @@ from MMFile import ProjectConfigFile
 from MMFolder import MMFolder as MMF
 from Project import Project as Project
 from ProjectConfig import ProjectConfigFile
+import os
 
 def makeNewProject(path):
     newProject = Project(path)
@@ -15,15 +16,13 @@ def makeNewProject(path):
     newProject.beginSession()
 
 def main():
-    projPath = '/Users/andrewbrady/Desktop/database/OTR/OTR104'
-    makeNewProject(projPath)
+    
+    MMF(os.getcwd()).transcode()
+    # MMF(os.getcwd()).downloadDummyImages()
 
 
 if __name__ == "__main__":
     main()
-
-
-
 
 
 

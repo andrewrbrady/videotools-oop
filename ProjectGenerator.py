@@ -21,20 +21,26 @@ class Generator():
     # Google Drive Actions en
 
     def remote_drive_actions(self):
-        self.localDirectoryParentBasename = os.path.basename(path.parent) # Get name of containing folder (Client Code)
-        self.remoteDriveParentFolder = os.path.join(GV.remoteDrivePath,self.localDirectoryParentBasename) # Join 
-        self.check_if_path_exists(self.remoteDriveParentFolder)
-        self.remote_drive_project_folder = os.path.join(self.remoteDriveParentFolder, self.projectPath)
-        self.check_if_path_exists(self.remote_drive_project_folder)
-        os.chdir(self.remote_drive_project_folder)
-        self.section_assembly(2, "documents", ["legal", "brief", "branding", "scripts", "production_schedule", "invoices", "logs"])
-        self.documents_dir = os.path.join(self.remote_drive_project_folder, '200_documents')
-        os.symlink(self.documents_dir, f'{self.projectPath}/200_documents')
-        self.local_recursive_subdirectory_creation_loop(self.read_folder_structure_json_file(), os.getcwd()) # Creates folders which were created on local directory that still need to be created on the remote folder. 
+        print("remote actions")
+        print(self.projectPath)
+        self.localDirectoryParentBasename = Path(self.projectPath).parent # Get name of containing folder (Client Code)
+        print(self.localDirectoryParentBasename)
+        # self.remoteDriveParentFolder = os.path.join(GV().remoteDrivePath,self.localDirectoryParentBasename) # Join 
+        print(GV.remoteDrivePath)
+        # self.check_if_path_exists(self.remoteDriveParentFolder)
+        # self.remote_drive_project_folder = os.path.join(self.remoteDriveParentFolder, self.projectPath)
+        # self.check_if_path_exists(self.remote_drive_project_folder)
+        # os.chdir(self.remote_drive_project_folder)
+        # self.section_assembly(2, "documents", ["legal", "brief", "branding", "scripts", "production_schedule", "invoices", "logs"])
+        # self.documents_dir = os.path.join(self.remote_drive_project_folder, '200_documents')
+        # os.symlink(self.documents_dir, f'{self.projectPath}/200_documents')
+        # self.local_recursive_subdirectory_creation_loop(self.read_folder_structure_json_file(), os.getcwd()) # Creates folders which were created on local directory that still need to be created on the remote folder. 
 
-    def check_if_in_project_directory(self, path):
-        self.current_project_regex_check = bool(re.match(r"^[a-zA-Z]{3}\-?\d{3,4}$", self.projectPath))
-        if self.current_project_regex_check == True:
+    def check_if_in_project_directory(self):
+        print('checking regex')
+        self.current_project_regex_check = bool(re.match(r"^[a-zA-Z]{3}\-?\d{3,4}$", os.path.basename(self.projectPath)))
+        print('checked regex')
+        if self.current_project_regex_check:
             print(r"""
 
             You are in a project directory which matches a project code.    
@@ -78,13 +84,15 @@ class Generator():
     def read_folder_structure_json_file(self):
         self.json_file = f'{os.path.dirname(os.path.realpath(__file__))}/full_project_structure.json'
         with open(self.json_file, "r") as self.read_file:
-            data = json.load(self.read_file)
+            self.data = json.load(self.read_file)
 
-        return data
+        return self.data
 
     def local_recursive_subdirectory_creation_loop(self, data, directory):
-        print(f'Total data length is: {len(data)}')
-        for d in data[0]['contents']:
+        self.data = data
+        self.directory = directory
+        print(f'Total data length is: {len(self.data)}')
+        for d in self.data[0]['contents']:
             # print(f'\n\n\n{d}\n\n\n')
             if d['type'] == "directory":
                 print(f'\nFound a directory!\n{d["name"]}\n') # Prints 100_level_directories
@@ -131,6 +139,8 @@ class Generator():
         print("We're done here")
 
     def run(self):
-        self.check_if_in_project_directory(self.projectPath) # Check current working directory to see if basename matches up with AAA123 project code format
+        print('before checker')
+        self.check_if_in_project_directory() # Check current working directory to see if basename matches up with AAA123 project code format
+        print('after checker')
         self.local_recursive_subdirectory_creation_loop(self.read_folder_structure_json_file(), self.projectPath) # Create all x00 level directories and subdirectories with Section Assembly function
         self.remote_drive_actions()

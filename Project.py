@@ -57,6 +57,10 @@ class Project():
     def favoriteFolders(self):
         pass
 
+    @property
+    def remoteFrameProjectLink(self):
+        pass
+
 
 
 

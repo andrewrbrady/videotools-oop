@@ -7,7 +7,10 @@ class GlobalVariables():
     def __init__(self):
         self.projectDirectory = ''
         self.homeDirectory = str(Path.home()) # returns user's home directory (ie: /Users/josephdavis)
-        self.remoteDrivePath = f'{Global.home}/Desktop/gdrive/Clients'
+        
+        @property
+        def remoteDrivePath():
+            return '/Users/andrewbrady/Desktop/gdrive/Clients'
 
 
 
