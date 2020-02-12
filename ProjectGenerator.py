@@ -25,16 +25,18 @@ class Generator():
         print(self.projectPath)
         self.localDirectoryParentBasename = Path(self.projectPath).parent # Get name of containing folder (Client Code)
         print(self.localDirectoryParentBasename)
-        # self.remoteDriveParentFolder = os.path.join(GV().remoteDrivePath,self.localDirectoryParentBasename) # Join 
-        print(GV.remoteDrivePath)
-        # self.check_if_path_exists(self.remoteDriveParentFolder)
-        # self.remote_drive_project_folder = os.path.join(self.remoteDriveParentFolder, self.projectPath)
-        # self.check_if_path_exists(self.remote_drive_project_folder)
-        # os.chdir(self.remote_drive_project_folder)
-        # self.section_assembly(2, "documents", ["legal", "brief", "branding", "scripts", "production_schedule", "invoices", "logs"])
-        # self.documents_dir = os.path.join(self.remote_drive_project_folder, '200_documents')
-        # os.symlink(self.documents_dir, f'{self.projectPath}/200_documents')
-        # self.local_recursive_subdirectory_creation_loop(self.read_folder_structure_json_file(), os.getcwd()) # Creates folders which were created on local directory that still need to be created on the remote folder. 
+        self.remoteDriveParentFolder = os.path.join(Path.home(), 'Desktop/gdrive/Clients', self.projectPath.split('/')[-2]) # Join 
+        print(self.remoteDriveParentFolder)
+        self.check_if_path_exists(self.remoteDriveParentFolder)
+        print('checked!')
+        self.remoteDriveProjectFolder = os.path.join(self.remoteDriveParentFolder, self.projectPath.split('/')[-1])
+        self.check_if_path_exists(self.remoteDriveProjectFolder)
+        os.chdir(self.remoteDriveProjectFolder)
+        print("in remote folder!")
+        self.section_assembly(2, "documents", ["legal", "brief", "branding", "scripts", "production_schedule", "invoices", "logs"])
+        self.documents_dir = os.path.join(self.remoteDriveProjectFolder, '200_documents')
+        os.symlink(self.documents_dir, f'{self.projectPath}/200_documents')
+        self.local_recursive_subdirectory_creation_loop(self.read_folder_structure_json_file(), os.getcwd()) # Creates folders which were created on local directory that still need to be created on the remote folder. 
 
     def check_if_in_project_directory(self):
         print('checking regex')

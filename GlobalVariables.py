@@ -5,12 +5,14 @@ from pathlib import Path
 
 class GlobalVariables():
     def __init__(self):
-        self.projectDirectory = ''
-        self.homeDirectory = str(Path.home()) # returns user's home directory (ie: /Users/josephdavis)
+        pass
+        # self.projectDirectory = ''
+        # self.homeDirectory = str() # returns user's home directory (ie: /Users/josephdavis)
         
         @property
-        def remoteDrivePath():
-            return '/Users/andrewbrady/Desktop/gdrive/Clients'
+        def remoteDrivePath(self):
+            print(f'{Path.home()}/Desktop/gdrive/Clients')
+            # return f'{self.homeDirectory}/Desktop/gdrive/Clients'
 
 
 
