@@ -39,7 +39,7 @@ class MMFolder():
                 os.rename(f.filePath, path + ext.lower())
 
     def transcode(self):
-        FFRun('dry') 
+        FFRun('loop') 
         
     def downloadDummyImages(self, maxImages=4, width=800, height=600):
         IB(maxImages, width, height).run()

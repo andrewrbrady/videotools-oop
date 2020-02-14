@@ -1,8 +1,11 @@
 #!/usr/local/bin/python3
 
+import concurrent.futures
+from concurrent.futures import ProcessPoolExecutor 
 import os
 import sys
 import subprocess
+import time
 
 class NewVideoFolder():
 	currentDirectory = os.getcwd()
@@ -25,7 +28,7 @@ class NewVideoFolder():
 7.1080P Proxy
 8.Cancel
 			""")
-			self.ans=input("What would you like to do? ") 
+			self.ans=input("What would you like to do?\n") 
 			if self.ans=="1": # Basic H264 MP4
 				self.output_format = 'mp4'
 				self.options = ['-pix_fmt', 'yuv420p']
@@ -50,7 +53,7 @@ class NewVideoFolder():
 			elif self.ans=="8": # Cancel
 				return None
 			else:
-				print("\n Not Valid Choice Try again")
+				print("\n Not Valid Choice Try again and again")
 
 			return self.output_format, self.options
 
@@ -72,13 +75,22 @@ class NewVideoFolder():
 			os.mkdir(self.proxy_directory) # Create export directory
 			subprocess.call(self.ffmpeg_array) # Run the FFMPEG command via subprocess
 
+	
+	def process_video(self, curFile, opts):
+			print(f'curFile: {curFile}')
+			print(f'opts: {opts}')
+			# self.videoConvert(curFile, os.path.splitext(os.path.basename(curFile))[0], opts[1], opts[0])
+
 	def loop(self):
 		opts = self.returnOptions()
-		if opts!=None:
-			for file in os.listdir(self.currentDirectory):
-				if not file.startswith('.') and os.path.basename(file) is not 'Icon\r': # blocks out .DS_Store & Icon files
-					print('Converting: ' + file)  
-					self.videoConvert(file, os.path.splitext(os.path.basename(file))[0], opts[1], opts[0])
+		t1 = time.perf_counter()
+		dirFiles = os.listdir(os.getcwd())
+		array = [(dirFiles[i], opts) for i in range(len(dirFiles))]
+		with ProcessPoolExecutor() as pool:
+			pool.map(self.process_video, *zip(*array))
+		t2 = time.perf_counter()
+
+
 
 	def dryLoop(self):
 		opts = self.returnOptions()
