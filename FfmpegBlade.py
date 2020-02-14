@@ -77,9 +77,9 @@ class NewVideoFolder():
 
 	
 	def process_video(self, curFile, opts):
-			print(f'curFile: {curFile}')
-			print(f'opts: {opts}')
-			# self.videoConvert(curFile, os.path.splitext(os.path.basename(curFile))[0], opts[1], opts[0])
+			# print(f'curFile: {curFile}')
+			# print(f'opts: {opts}')
+			self.videoConvert(curFile, os.path.splitext(os.path.basename(curFile))[0], opts[1], opts[0])
 
 	def loop(self):
 		opts = self.returnOptions()
@@ -89,6 +89,7 @@ class NewVideoFolder():
 		with ProcessPoolExecutor() as pool:
 			pool.map(self.process_video, *zip(*array))
 		t2 = time.perf_counter()
+		print(t2-t1)
 
 
 
