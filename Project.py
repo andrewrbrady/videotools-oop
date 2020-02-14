@@ -3,9 +3,13 @@
 import os
 from ProjectGenerator import Generator
 
+
 logPath = '200_documents/207_logs'
 
+
+
 class Project():
+
 
     def __init__(self, projectPath):
         self.projectPath = projectPath
@@ -17,12 +21,19 @@ class Project():
     def endSession(self):
         # Activity Log entry, end working project
         pass
-        
-    def generateTemplate(self):
-        print('Generating Template...')
-        Generator.run()
-        # Create file structure with symlinked items
 
+    @property
+    def fullVideoProjectDirectory(self):
+        self.videoProjectPath = '600_edit/603_master'
+        # self.projectCode = self.projectPath.split('/')[-1]
+        return os.path.join(self.projectPath, self.videoProjectPath)
+
+    @property
+    def fullVideoProjectPath(self):
+        self.videoProjectPath = '600_edit/603_master'
+        self.projectCode = self.projectPath.split('/')[-1]
+        return os.path.join(self.projectPath, self.videoProjectPath, f'{self.projectCode}.prproj')
+        
     @property
     def projectConfigFilePath(self):
         

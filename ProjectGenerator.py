@@ -5,6 +5,8 @@ import json
 import os
 from pathlib import Path
 import re
+# from MMFolder import MMFolder as MMF
+import shutil
 
 class Generator():
     def __init__(self, projectPath):
@@ -21,22 +23,17 @@ class Generator():
     # Google Drive Actions en
 
     def remote_drive_actions(self):
-        print("remote actions")
-        print(self.projectPath)
         self.localDirectoryParentBasename = Path(self.projectPath).parent # Get name of containing folder (Client Code)
-        print(self.localDirectoryParentBasename)
         self.remoteDriveParentFolder = os.path.join(Path.home(), 'Desktop/gdrive/Clients', self.projectPath.split('/')[-2]) # Join 
-        print(self.remoteDriveParentFolder)
         self.check_if_path_exists(self.remoteDriveParentFolder)
-        print('checked!')
         self.remoteDriveProjectFolder = os.path.join(self.remoteDriveParentFolder, self.projectPath.split('/')[-1])
         self.check_if_path_exists(self.remoteDriveProjectFolder)
         os.chdir(self.remoteDriveProjectFolder)
-        print("in remote folder!")
         self.section_assembly(2, "documents", ["legal", "brief", "branding", "scripts", "production_schedule", "invoices", "logs"])
         self.documents_dir = os.path.join(self.remoteDriveProjectFolder, '200_documents')
         os.symlink(self.documents_dir, f'{self.projectPath}/200_documents')
         self.local_recursive_subdirectory_creation_loop(self.read_folder_structure_json_file(), os.getcwd()) # Creates folders which were created on local directory that still need to be created on the remote folder. 
+        os.chdir(self.projectPath)
 
     def check_if_in_project_directory(self):
         print('checking regex')
@@ -140,9 +137,25 @@ class Generator():
                             print("No further subdirectories found.")
         print("We're done here")
 
+    def copyVideoProject(self):
+        self.videoProjectFileDirectory = '600_edit/603_master'
+        self.newPath = os.path.join(self.projectPath, self.videoProjectFileDirectory)
+        self.remoteProjectFile = f'{Path.home()}/Desktop/gdrive/Clients/ARB/ARB000-templates/001-video-project/XXX123/600_edit/603_master/XXX123.prproj'
+        self.newProjFile = os.path.join(self.newPath, f'{self.projectPath.split("/")[-1]}.prproj')
+        shutil.copy(self.remoteProjectFile, self.newProjFile)
+
+    def copyAEProject(self):
+        self.AEProjectFileDirectory = '700_AE/704_master'
+        self.newPath = os.path.join(self.projectPath, self.AEProjectFileDirectory)
+        self.remoteProjectFile = f'{Path.home()}/Desktop/gdrive/Clients/ARB/ARB000-templates/001-video-project/XXX123/700_AE/704_master/XXX123.aep'
+        self.newProjFile = os.path.join(self.newPath, f'{self.projectPath.split("/")[-1]}.aep')
+        shutil.copy(self.remoteProjectFile, self.newProjFile)
+
     def run(self):
         print('before checker')
         self.check_if_in_project_directory() # Check current working directory to see if basename matches up with AAA123 project code format
         print('after checker')
         self.local_recursive_subdirectory_creation_loop(self.read_folder_structure_json_file(), self.projectPath) # Create all x00 level directories and subdirectories with Section Assembly function
         self.remote_drive_actions()
+        self.copyVideoProject()
+        self.copyAEProject()

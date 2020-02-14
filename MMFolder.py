@@ -3,6 +3,7 @@ from MMFile import ImageFile as IF
 from FfmpegBlade import run as FFRun
 from UnsplashDownloader import ImageBatch as IB
 from ProjectGenerator import Generator as PG
+from pathlib import Path
 import os
 
 class MMFolder():
@@ -23,6 +24,30 @@ class MMFolder():
         
         return my_list
 
+    @property
+    def fullVideoProjectDirectory(self):
+        self.videoProjectPath = '600_edit/603_master'
+        # self.projectCode = self.projectPath.split('/')[-1]
+        return os.path.join(self.directoryPath, self.videoProjectPath)
+
+    @property
+    def fullVideoProjectPath(self):
+        self.videoProjectPath = '600_edit/603_master'
+        self.projectCode = self.directoryPath.split('/')[-1]
+        return os.path.join(self.directoryPath, self.videoProjectPath, f'{self.projectCode}.prproj')
+
+    @property
+    def fullAEProjectPath(self):
+        self.AEProjectPath = '700_AE/704_master'
+        self.projectCode = self.directoryPath.split('/')[-1]
+        return os.path.join(self.directoryPath, self.AEProjectPath, f'{self.projectCode}.aep')
+
+    @property
+    def remoteProjectDirectory(self):
+        # localDirectoryParentBasename = os.path.basename(self.directoryPath) # Get name of containing folder (Client Code)
+        self.remoteDriveProjectFolder = os.path.join(Path.home(), 'Desktop/gdrive/Clients', self.directoryPath.split('/')[-2], self.directoryPath.split('/')[-1])
+        return self.remoteDriveProjectFolder
+
     def runMethod(self):
         self.list = self.allFiles
         for x in range(len(self.list)):
@@ -39,7 +64,7 @@ class MMFolder():
                 os.rename(f.filePath, path + ext.lower())
 
     def transcode(self):
-        FFRun('dry') 
+        FFRun('loop') 
         
     def downloadDummyImages(self, maxImages=4, width=800, height=600):
         IB(maxImages, width, height).run()

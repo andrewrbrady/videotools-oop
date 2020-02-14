@@ -1,7 +1,10 @@
 #!/usr/local/bin/python3
 
 from MMFolder import MMFolder as MMF
+
+
 import os
+import subprocess
 
 class MainUI():
     def __init__(self, path):
@@ -13,10 +16,13 @@ class MainUI():
             print (f'''
 MAIN MENU | {os.getcwd()}
 -------------------------------
-1.Transcode
-2.Download Images from Upsplash
-3.Print all files
-4.Generate project structure
+1. Transcode
+2. Download Images from Upsplash
+3. Print all files
+4. Generate project structure
+5. Open Video Project
+6. Open AE Project
+7. Open Remote Folder
             ''')
             ans=input("What would you like to do?")
             try:
@@ -34,6 +40,18 @@ MAIN MENU | {os.getcwd()}
 
                 elif ans[0]=="4":
                     MMF(self.path).createProjectStructure()
+
+                elif ans[0]=="5":
+                    cmd = ['open', MMF(self.path).fullVideoProjectPath] 
+                    subprocess.call(cmd)
+
+                elif ans[0]=="6":
+                    cmd = ['open', MMF(self.path).fullAEProjectPath] 
+                    subprocess.call(cmd)
+
+                elif ans[0]=="7":
+                    cmd = ['open', MMF(self.path).remoteProjectDirectory]
+                    
 
                 elif ans[0]=='q':
                     break
