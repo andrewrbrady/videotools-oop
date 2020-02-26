@@ -2,7 +2,6 @@
 
 from datetime import datetime
 import time
-from ffprobe import FFProbe
 import json
 import os
 from PIL import Image
@@ -10,13 +9,12 @@ import subprocess
 
 class MMFile():
     def __init__(self, path):
-        self.filePath = path
         self.fileWOExtension, self.fileExtension = os.path.splitext(self.filePath)
         self.fileBasename = os.path.basename(self.filePath)
         self.size = os.path.getsize(path)
 
     def renameFile(self, newFileBasename):
-        print(f'Renaming {self.fileBasename} to {newFileBasename}')
+        print(f'Renaming {fileBasename} to {newFileBasename}')
 
     def openFile(self, path):
         print(f'Opening file {self.filePath}')  
@@ -36,7 +34,6 @@ class VideoFile(MMFile):
         self.opts = options
         self.videoConvert(self.opts[0], self.opts[1])
         
-
     def returnOptions(self):
         ans=True
         while ans:
@@ -97,7 +94,7 @@ class VideoFile(MMFile):
         print('Transcribing video!')
 
     def resize(self):
-        newActivity = ActivityFile('/Users/andrewbrady/Desktop/database/OTR/OTR103')
+        newActivity = ActivityFile('/Users/andrewbrady/Development/sandbox/client_directory_sandbox/OTR/OTR103')
         newActivity.createNewActivity(f'Resized {self.filePath}')
         print('Resizing video!')
     

@@ -75,10 +75,7 @@ class NewVideoFolder():
 			os.mkdir(self.proxy_directory) # Create export directory
 			subprocess.call(self.ffmpeg_array) # Run the FFMPEG command via subprocess
 
-	
 	def process_video(self, curFile, opts):
-			# print(f'curFile: {curFile}')
-			# print(f'opts: {opts}')
 			self.videoConvert(curFile, os.path.splitext(os.path.basename(curFile))[0], opts[1], opts[0])
 
 	def loop(self):
@@ -91,15 +88,12 @@ class NewVideoFolder():
 		t2 = time.perf_counter()
 		print(t2-t1)
 
-
-
 	def dryLoop(self):
 		opts = self.returnOptions()
 		if opts!=None:
 			for file in os.listdir(self.currentDirectory):
 				if not file.startswith('.') and os.path.basename(file) is not 'Icon\r': # blocks out .DS_Store & Icon files
 					print('Converting: ' + file)  
-					# self.videoConvert(file, os.path.splitext(os.path.basename(file))[0], opts[1], opts[0])
 
 def run(command='loop'):
 	myVideoFolder = NewVideoFolder(command)
@@ -110,10 +104,6 @@ def run(command='loop'):
 
 def main():
 	run()
-
-	
-
-	
 
 if __name__ == '__main__':
 	main()
