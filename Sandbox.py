@@ -20,11 +20,6 @@ def main():
     MMF(os.getcwd()).transcode()
     # MMF(os.getcwd()).downloadDummyImages()
 
-
 if __name__ == "__main__":
     main()
-
-
-
-
 
